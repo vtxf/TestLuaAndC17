@@ -21,6 +21,32 @@ extern "C" {
 
 using namespace std;
 
+static int AverageAndSum(lua_State *L)
+{
+	//返回栈中元素的个数  
+	int n = lua_gettop(L);
+	//存储各元素之和  
+	double sum = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		//参数类型处理  
+		if (!lua_isnumber(L, i))
+		{
+			//传入错误信息  
+			lua_pushstring(L, "Incorrect argument to 'average'");
+			lua_error(L);
+		}
+		sum += lua_tonumber(L, i);
+	}
+	//传入平均值  
+	lua_pushnumber(L, sum / n);
+	//传入和  
+	lua_pushnumber(L, sum);
+
+	//返回值的个数，这里为2  
+	return 2;
+}
+
 int main()
 {
 	//创建Lua环境  
@@ -28,6 +54,9 @@ int main()
 	//打开Lua标准库,常用的标准库有luaopen_base、luaopen_package、luaopen_table、luaopen_io、  
 	//luaopen_os、luaopen_string、luaopen_math、luaopen_debug  
 	luaL_openlibs(L);
+
+	// 在C++中使用lua_register()方法完成对该方法的注册
+	lua_register(L, "AverageAndSum", AverageAndSum);
 
 	//下面的代码可以用luaL_dofile()来代替  
 	//加载Lua脚本  
@@ -71,6 +100,4 @@ int main()
 	lua_gettable(L, -2);
 	//输出表中第一个元素  
 	cout << "table.a=" << lua_tonumber(L, -1) << endl;
-
 }
-

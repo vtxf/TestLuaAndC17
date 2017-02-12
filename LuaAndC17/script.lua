@@ -18,3 +18,8 @@ end
 function printf()  
   print("This is a function declared in Lua")  
 end  
+
+--在Lua中调用C++中定义并且注册的方法  
+average,sum=AverageAndSum(20,52,75,14)  
+print("Average="..average)  
+print("Sum="..sum)  
